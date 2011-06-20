@@ -1,2 +1,4 @@
 # FallbackResource requires Apache >= 2.2.12
-FallbackResource ./test.php
+# If you plan on caching subdirectories, you'll need to use a site-root path
+FallbackResource test.php
+DefaultType "text/html; charset=utf-8"
