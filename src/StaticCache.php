@@ -38,7 +38,7 @@ class StaticCache
      *
      * @see StaticCache::setOptions()
      */
-    function __construct($options = array())
+    public function __construct($options = array())
     {
         if (!isset($options['root_dir'])) {
             // Use the server's document root by default
@@ -67,7 +67,7 @@ class StaticCache
      *
      * @return boolean|string
      */
-    function get($request_uri)
+    public function get($request_uri)
     {
         $file = $this->getLocalFilename($request_uri);
 
@@ -129,7 +129,7 @@ class StaticCache
      *
      * @return boolean
      */
-    function createDirs($file)
+    protected function createDirs($file)
     {
         $dir = dirname($file);
 
