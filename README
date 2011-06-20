@@ -35,3 +35,9 @@ directories for collections that will have child-resources.
 
 GET /people/
 GET /people/123
+
+Also, querystring requests will go to the original file:
+GET /people/123?format=json will pull /var/www/html/people/123
+
+This is why it is important to use file extensions in the urls:
+GET /people/123.json
