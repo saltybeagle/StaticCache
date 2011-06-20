@@ -23,3 +23,15 @@ and a utility such as tmpwatch can be used to automate emptying the cache:
 `tmpwatch 2 /var/www/html/people`
 
 Remove everything in the `people` directory that is more than two hours old.
+
+A couple warnings for collection URLs and sub-paths.
+
+This sequence will not work:
+GET /people
+GET /people/123
+
+Because the first request will be a filename, and not a directory. Instead, use
+directories for collections that will have child-resources.
+
+GET /people/
+GET /people/123
