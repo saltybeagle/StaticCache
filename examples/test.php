@@ -7,12 +7,10 @@ $cache = new StaticCache($options);
 
 $key = substr($_SERVER['REQUEST_URI'], strlen(parse_url('/workspace/StaticCache/examples/', PHP_URL_PATH)));
 
-var_dump($key);
-
 if ($data = $cache->get($key)) {
     echo 'Got from cache';
 } else {
-    $data = 'FOoooooom, '.$key.' cached at '.date('Y-m-d H:i:s');
+    $data = $key.' cached at '.date('Y-m-d H:i:s');
     $cache->save($data, $key);
 }
 echo $data;
