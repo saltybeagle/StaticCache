@@ -108,6 +108,10 @@ class StaticCache
      */
     protected function getLocalFilename($request_uri)
     {
+        if (empty($request_uri)) {
+            throw new Exception('request_uri cannot be empty');
+        }
+
         if (false !== strpos($request_uri, '..')) {
             throw new Exception('upper directory reference .. cannot be used');
         }
