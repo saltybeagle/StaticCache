@@ -8,14 +8,36 @@
  */
 class StaticCache
 {
+    /**
+     * The web root where files will be stored
+     *
+     * @var string
+     */
     protected $root_dir;
 
+    /**
+     * If existing files should be overwritten, typically not needed
+     *
+     * @var bool
+     */
     protected $update_files = false;
 
+    /**
+     * Default options for the class
+     *
+     * @var array
+     */
     protected $default_options = array(
         'update_files' => false
     );
 
+    /**
+     * Construct a new StaticCache lib
+     *
+     * @param array $options Associative array of options
+     *
+     * @see StaticCache::setOptions()
+     */
     function __construct($options = array())
     {
         if (!isset($options['root_dir'])) {
@@ -25,6 +47,11 @@ class StaticCache
         $this->setOptions($options);
     }
 
+    /**
+     * Set configuration options for the cache library
+     *
+     * @param array $options Associative array of options
+     */
     public function setOptions($options = array())
     {
         $options = $options + $this->default_options;
@@ -33,6 +60,13 @@ class StaticCache
         $this->update_files = (bool)$options['update_files'];
     }
 
+    /**
+     * Attempt to get cached output
+     *
+     * @param string $request_uri Request URI, usually $_SERVER['REQUEST_URI']
+     *
+     * @return boolean|string
+     */
     function get($request_uri)
     {
         $file = $this->getLocalFilename($request_uri);
@@ -48,6 +82,14 @@ class StaticCache
         return false;
     }
 
+    /**
+     * Save the data to the key specified
+     *
+     * @param string $data        Rendered output
+     * @param string $request_uri Request URI, usually $_SERVER['REQUEST_URI']
+     *
+     * @return boolean
+     */
     public function save($data, $request_uri)
     {
         $file = $this->getLocalFilename($request_uri);
@@ -55,6 +97,15 @@ class StaticCache
         return $this->saveCacheFile($file, $data);
     }
 
+    /**
+     * Convert the request_uri to a local filename
+     *
+     * @param string $request_uri The request URI
+     *
+     * @throws Exception
+     *
+     * @return string
+     */
     protected function getLocalFilename($request_uri)
     {
         if (false !== strpos($request_uri, '..')) {
@@ -69,6 +120,15 @@ class StaticCache
         return $this->root_dir.$request_uri;
     }
 
+    /**
+     * Create parent directories for the file
+     *
+     * @param string $file Local filename
+     *
+     * @throws Exception
+     *
+     * @return boolean
+     */
     function createDirs($file)
     {
         $dir = dirname($file);
@@ -84,10 +144,14 @@ class StaticCache
     }
 
     /**
-     * Save the cache using the requested URI
+     * Save contents to specified filename
+     * 
+     * This is a hardended version of file_put_contents
      *
-     * @param string $file
-     * @param string $contents
+     * @param string $file     Local filename to write
+     * @param string $contents Contents of the file
+     *
+     * @throws Exception
      *
      * @return boolean
      */
