@@ -8,27 +8,36 @@
  */
 class StaticCache
 {
-    /**
-     * The web root where files will be stored
-     *
-     * @var string
-     */
-    protected $root_dir;
-
-    /**
-     * If existing files should be overwritten, typically not needed
-     *
-     * @var bool
-     */
-    protected $update_files = false;
 
     /**
      * Default options for the class
      *
      * @var array
      */
-    protected $default_options = array(
-        'update_files' => false
+    protected $options = array(
+        /**
+         * The web root where files will be stored
+         *
+         * @var string
+         */
+        'root_dir'            => '',
+
+        /**
+         * If existing files should be overwritten, typically not needed
+         *
+         * @var bool
+         */
+        'update_files'        => false,
+
+        /**
+         * Umask to use for new directories
+         *
+         * If new directories are created, this controls the umask set for
+         * new directories.
+         *
+         * @var integer
+         */
+        'new_directory_umask' => 0700,
     );
 
     /**
@@ -40,7 +49,7 @@ class StaticCache
      */
     public function __construct($options = array())
     {
-        if (!isset($options['root_dir'])) {
+        if (empty($options['root_dir'])) {
             // Use the server's document root by default
             $options['root_dir'] = $_SERVER['DOCUMENT_ROOT'];
         }
@@ -54,10 +63,7 @@ class StaticCache
      */
     public function setOptions($options = array())
     {
-        $options = $options + $this->default_options;
-
-        $this->root_dir     = $options['root_dir'];
-        $this->update_files = (bool)$options['update_files'];
+        $this->options = $options + $this->options;
     }
 
     /**
@@ -121,7 +127,7 @@ class StaticCache
             $request_uri = DIRECTORY_SEPARATOR . $request_uri;
         }
 
-        return $this->root_dir.$request_uri;
+        return $this->options['root_dir'].$request_uri;
     }
 
     /**
@@ -141,7 +147,7 @@ class StaticCache
             return true;
         }
 
-        if (false === mkdir($dir, 0777, true)) {
+        if (false === mkdir($dir, $this->options['new_directory_umask'], true)) {
             throw new Exception('Could not create directory structure for '.$file);
         }
         return true;
@@ -170,7 +176,7 @@ class StaticCache
                 fclose($cachefile_fp);
                 throw new Exception("Could not write $file.");
             }
-        } elseif (false === $this->update_files) {
+        } elseif (false === $this->options['update_files']) {
             throw new Exception('File already exists, set update_files=>true or empty the cache');
         } else { // update file
             $cachefile_lstat = lstat($file);
