@@ -17,4 +17,9 @@ output to /var/www/html/people/124 and subsequent requests will not be sent
 to PHP for interpretation, allowing Apache to do what it does best, serve
 static content.
 
-Emptying the cache is as simple as removing the /var/www/html/people directory.
+Emptying the cache is as simple as removing the /var/www/html/people directory,
+and a utility such as tmpwatch can be used to automate emptying the cache:
+
+`tmpwatch 2 /var/www/html/people`
+
+Remove everything in the `people` directory that is more than two hours old.
