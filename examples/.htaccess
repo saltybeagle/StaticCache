@@ -1,1 +1,2 @@
+# FallbackResource requires Apache >= 2.2.12
 FallbackResource ./test.php
