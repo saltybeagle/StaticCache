@@ -38,6 +38,14 @@ class StaticCache
          * @var integer
          */
         'new_directory_umask' => 0700,
+
+        /**
+         * Filename to use for directory indexes, this should match what Apache
+         * has configured for DirectoryIndex
+         *
+         * @var string
+         */
+        'index_document'      => 'index.html',
     );
 
     /**
@@ -114,12 +122,14 @@ class StaticCache
      */
     protected function getLocalFilename($request_uri)
     {
-        if (empty($request_uri)) {
-            throw new Exception('request_uri cannot be empty');
-        }
-
         if (false !== strpos($request_uri, '..')) {
             throw new Exception('upper directory reference .. cannot be used');
+        }
+
+        if (   empty($request_uri)
+            || substr($request_uri, -1) === '/') {
+            // User is requesting a directory index
+            $request_uri .= $this->options['index_document'];
         }
 
         if ($request_uri[0] !== '/') {
