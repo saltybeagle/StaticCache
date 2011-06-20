@@ -1,0 +1,20 @@
+A caching library that uses the filesystem for storing cached output
+in static files which can be served by Apache.
+
+Many PHP applications use Apache's mod_rewrite to create clean URLs. Typically
+this involves rewriting requests for missings files to index.php. When this
+happens, PHP translates the route, generates the content and responds.
+
+Smart people cache the result to improve speed. This takes the idea one step
+further by writing the output to the filesystem, so subsequent requests do not
+need to be interpreted by PHP.
+
+For example:
+GET /people/124
+
+For this request, the cache key is /people/124, StaticCache will write the 
+output to /var/www/html/people/124 and subsequent requests will not be sent
+to PHP for interpretation, allowing Apache to do what it does best, serve
+static content.
+
+Emptying the cache is as simple as removing the /var/www/html/people directory.
