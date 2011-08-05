@@ -1,10 +1,28 @@
 <?php
 /**
  * Static caching library. So simple, you should KISS it.
- *
- *
- * @author bbieber
- *
+ * 
+ * PHP version 5
+ * 
+ * @category  Caching
+ * @package   StaticCache
+ * @author    Brett Bieber <brett.bieber@gmail.com>
+ * @copyright 2011 Brett Bieber
+ * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @link      https://github.com/saltybeagle/StaticCache
+ */
+
+/**
+ * Simple active record implementation for pearhunt.
+ * 
+ * PHP version 5
+ * 
+ * @category  Caching
+ * @package   StaticCache
+ * @author    Brett Bieber <brett.bieber@gmail.com>
+ * @copyright 2011 Brett Bieber
+ * @license   http://www.opensource.org/licenses/bsd-license.php BSD License
+ * @link      https://github.com/saltybeagle/StaticCache
  */
 class StaticCache
 {
