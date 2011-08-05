@@ -240,6 +240,19 @@ class StaticCache
         return true;
     }
 
+    /**
+     * This is a simple method for handling the most basic of output caching.
+     * 
+     * This uses output buffering to capture any generated output, then saves
+     * that output to a filename matching the request URI.
+     * 
+     * Certain conditions are checked to ensure only idempotent requests are 
+     * saved. $_GET, $_POST, and $_FILES must all be empty.
+     * 
+     * @param array $options Associative array of options
+     * 
+     * @see StaticCache::__construct()
+     */
     public static function autoCache($options = array())
     {
         ob_start();
