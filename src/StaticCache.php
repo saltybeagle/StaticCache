@@ -178,7 +178,7 @@ class StaticCache
     protected function saveCacheFile($file, $contents)
     {
         $len = strlen($contents);
-    
+
         $cachefile_fp = @fopen($file, 'xb'); // x is the O_CREAT|O_EXCL mode
         if ($cachefile_fp !== false) {
             // create file
@@ -194,7 +194,7 @@ class StaticCache
             if (!$cachefile_fp) {
                 throw new Exception("Could not open $file for writing. Likely a permissions error.");
             }
-    
+
             $cachefile_fstat = fstat($cachefile_fp);
             if (
             $cachefile_lstat['mode'] == $cachefile_fstat['mode'] &&
@@ -212,7 +212,7 @@ class StaticCache
                 throw new Exception('SECURITY ERROR: Will not write to ' . $file . ' as it is symlinked to ' . $link . ' - Possible symlink attack');
             }
         }
-    
+
         fclose($cachefile_fp);
         return true;
     }
