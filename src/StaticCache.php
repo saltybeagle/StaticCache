@@ -247,7 +247,12 @@ class StaticCache
      * that output to a filename matching the request URI.
      * 
      * Certain conditions are checked to ensure only idempotent requests are 
-     * saved. $_GET, $_POST, and $_FILES must all be empty.
+     * saved:
+     * 
+     * * $_GET, $_POST, and $_FILES must all be empty
+     * * No headers must be already sent
+     * * If a Status header is to be sent, must be <300
+     * * Do not cache Location: redirects
      * 
      * @param array $options Associative array of options
      * 
