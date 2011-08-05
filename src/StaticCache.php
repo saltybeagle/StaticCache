@@ -204,15 +204,20 @@ class StaticCache
                 fclose($cachefile_fp);
                 throw new Exception("Could not write $file.");
             }
-        } elseif (false === $this->options['update_files']) {
-            throw new Exception('File already exists, set update_files=>true or empty the cache');
-        } else { // update file
-            $cachefile_lstat = lstat($file);
+        } else {
+            // could not open for create
+
+            if (file_exists($file)
+                && true !== $this->options['update_files']) {
+                throw new Exception("The file $file already exists. Set update_files=>true or empty the cache");
+            }
+
+            $cachefile_lstat = @lstat($file);
             $cachefile_fp = @fopen($file, 'wb');
             if (!$cachefile_fp) {
                 throw new Exception("Could not open $file for writing. Likely a permissions error.");
             }
-
+    
             $cachefile_fstat = fstat($cachefile_fp);
             if (
             $cachefile_lstat['mode'] == $cachefile_fstat['mode'] &&
@@ -246,7 +251,6 @@ class StaticCache
                 try {
                     $cache->save($data, $request_uri);
                 } catch(Exception $e) {
-                    echo $e;
                     // Fail silently
                 }
             }
