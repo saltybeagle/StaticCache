@@ -55,7 +55,7 @@ class StaticCache
          *
          * @var integer
          */
-        'new_directory_umask' => 0700,
+        'new_directory_umask' => 0777,
 
         /**
          * Filename to use for directory indexes, this should match what Apache
@@ -77,7 +77,7 @@ class StaticCache
     {
         if (empty($options['root_dir'])) {
             // Use the server's document root by default
-            $options['root_dir'] = $_SERVER['DOCUMENT_ROOT'];
+            $options['root_dir'] = getcwd();
         }
         $this->setOptions($options);
     }
@@ -232,6 +232,70 @@ class StaticCache
         }
 
         fclose($cachefile_fp);
+        return true;
+    }
+
+    public static function autoCache($options = array())
+    {
+        ob_start();
+        $cache = new StaticCache($options);
+        register_shutdown_function(function() use ($cache) {
+            if ($cache->requestIsCacheable($_GET, $_POST, $_FILES, $_SERVER)) {
+                $request_uri = substr($_SERVER['REQUEST_URI'], strlen(dirname($_SERVER['SCRIPT_NAME'])));
+                $data = ob_get_contents();
+                try {
+                    $cache->save($data, $request_uri);
+                } catch(Exception $e) {
+                    echo $e;
+                    // Fail silently
+                }
+            }
+        });
+    }
+
+   /**
+    * Simple checks to determine if a request should be cached or not.
+    * 
+    * @return bool
+    */
+    function requestIsCacheable($get = array(), $post = array(), $files = array(), $server = array())
+    {
+        if (!(
+               empty($get)
+            && empty($post)
+            && empty($files)
+            )) {
+            return false;
+        }
+
+        if (isset($server['REQUEST_METHOD'])) {
+            switch ($server['REQUEST_METHOD']) {
+                case 'POST':
+                case 'PUT':
+                    return false;
+                case 'GET':
+                case 'HEAD':
+                default:
+                    continue;
+            }
+        }
+
+        if (headers_sent()) {
+            // We have no clue what the headers should be, so abort caching
+            return false;
+        }
+
+        foreach (headers_list() as $header) {
+            if (preg_match('/^(HTTP\/[\d]+\.[\d]+|Status:)\s+([3-5][\d]+)\s*.*$/', $header)) {
+                // Do not cache anything greater than 299
+                return false;
+            }
+            if (0 === strpos($header, 'Location:')) {
+                // Do not cache redirects
+                return false;
+            }
+        }
+
         return true;
     }
 }
