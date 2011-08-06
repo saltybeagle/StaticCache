@@ -5,8 +5,8 @@ Basic functionality
 
 require __DIR__ . '/setup.inc';
 
-$requestURI = '/dirname/file.txt';
-$expectedFile = __DIR__ . '/dirname/file.txt';
+$requestURI = '/dirname/';
+$expectedFile = __DIR__ . '/dirname/index.html';
 
 include __DIR__ . '/expect_save.inc';
 
@@ -14,7 +14,7 @@ include __DIR__ . '/expect_save.inc';
 ==done==
 --CLEAN--
 <?php
-$expectedFile = __DIR__ . '/dirname/file.txt';
+$expectedFile = __DIR__ . '/dirname/index.html';
 if (file_exists($expectedFile)) {
     unlink($expectedFile);
     rmdir(dirname($expectedFile));
