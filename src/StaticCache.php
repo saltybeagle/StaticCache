@@ -93,6 +93,16 @@ class StaticCache
     }
 
     /**
+     * Get configuration options
+     * 
+     * @return array
+     */
+    public function getOptions()
+    {
+    	return $this->options;
+    }
+
+    /**
      * Attempt to get cached output
      *
      * @param string $request_uri Request URI, usually $_SERVER['REQUEST_URI']
