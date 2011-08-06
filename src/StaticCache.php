@@ -317,7 +317,7 @@ class StaticCache
             return false;
         }
 
-        foreach (headers_list() as $header) {
+        foreach ($this->getResponseHeaders() as $header) {
             if (preg_match('/^(HTTP\/[\d]+\.[\d]+|Status:)\s+([3-5][\d]+)\s*.*$/', $header)) {
                 // Do not cache anything greater than 299
                 return false;
@@ -329,5 +329,15 @@ class StaticCache
         }
 
         return true;
+    }
+
+    /**
+     * Test helper
+     * 
+     * @return array Array of headers to be sent
+     */
+    protected function getResponseHeaders()
+    {
+    	return headers_list();
     }
 }
