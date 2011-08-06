@@ -1,0 +1,7 @@
+*.out
+*.diff
+*.log
+*.exp
+*.php
+*.xdebug
+pear2coverage.db
