@@ -13,7 +13,7 @@
  */
 
 /**
- * Simple active record implementation for pearhunt.
+ * Simple static caching library which uses the requestURI and filesystem.
  * 
  * PHP version 5
  * 
