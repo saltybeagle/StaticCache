@@ -26,13 +26,17 @@ Remove everything in the `people` directory that is more than two hours old.
 
 A couple warnings for collection URLs and sub-paths.
 
-This sequence will not work:
+The following sequence requires the people file to be converted to a directory:
 GET /people
 GET /people/123
 
-Because the first request will create a people file and not a directory.
-Instead, use directories for collections that will have child-resources, by
-redirecting to the path with a trailing slash.
+The first request will create a people file, the subsequent request requires
+that the people file be converted to people/index.html.
+
+Susequent requests to /people will (usually) be redirected to /people/ and
+will serve up people/index.html.
+
+As a tip, reference collections using a trailing slash.
 
 GET /people/
 GET /people/123
