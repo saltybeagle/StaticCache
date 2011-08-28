@@ -185,9 +185,57 @@ class StaticCache
             return true;
         }
 
+        if (is_file($dir)) {
+            $this->convertFileToDir($dir);
+            return true;
+        }
+
         if (false === mkdir($dir, $this->options['new_directory_umask'], true)) {
             throw new Exception('Could not create directory structure for '.$file);
         }
+        return true;
+    }
+
+    /**
+     * Convert a file to a directory
+     * 
+     * This method corrects request sequences such as:
+     * GET /people
+     * GET /people/123
+     * 
+     * The first request will create a people file and not a directory, this 
+     * method converts the people file into a directory.
+     *
+     * @param string $file Existing file to convert to a directory
+     *
+     * @throws Exception
+     * 
+     * @return true
+     */
+    protected function convertFileToDir($file)
+    {
+
+        // Copy existing file to a temp file
+        if (false === copy($file, $file . '__staticcache__')) {
+            // Failed to convert existing file to directory
+            throw New Exception('Sorry, that directory already exists as a file.');
+        }
+
+        if (false === unlink($file)) {
+            // Failed to remove existing file
+            throw new Exception('Could not remove '.$file.' while converting file to dir.');
+        }
+
+        // Now create the directory for the index document
+        $this->createDirs($file . DIRECTORY_SEPARATOR . $this->options['index_document']);
+
+        if (false === copy($file . '__staticcache__', $file . DIRECTORY_SEPARATOR . $this->options['index_document'])) {
+            // Failed to copy dir to index document
+            throw new Exception('Failed to copy existing file to index document.');
+        }
+
+        // Remove temprary file
+        unlink($file . '__staticcache__');
         return true;
     }
 
