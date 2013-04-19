@@ -190,10 +190,17 @@ class StaticCache
             return true;
         }
 
-        if (false === mkdir($dir, $this->options['new_directory_umask'], true)) {
-            throw new Exception('Could not create directory structure for '.$file);
+        if (false === @mkdir($dir, $this->options['new_directory_umask'], true)) {
+            if (dirname($dir) != $dir) {
+                // Try creating the parent directory
+                if ($this->createDirs($dir)) {
+                    // Success, now create it for the file again
+                    $this->createDirs($file);
+                }
+            } else {
+                throw new Exception('Could not create directory structure for '.$file);
+            }
         }
-        return true;
     }
 
     /**

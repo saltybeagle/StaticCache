@@ -24,9 +24,10 @@ include __DIR__ . '/expect_save.inc';
 
 $expectedFile = __DIR__ . '/testcollection2/parentresource/childresource';
 if (file_exists($expectedFile)) {
-    unlink($expectedFile);
-    unlink(dirname($expectedFile).'/index.html');
-    rmdir(dirname($expectedFile));
+    unlink(__DIR__ . '/testcollection2/parentresource/childresource');
+    unlink(__DIR__ . '/testcollection2/index.html');
+    rmdir(__DIR__ . '/testcollection2/parentresource');
+    rmdir(__DIR__ . '/testcollection2');
 }
 
 ?>
