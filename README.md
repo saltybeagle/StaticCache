@@ -28,7 +28,8 @@ That command will remove everything in the `people` directory that is more than 
 
 A couple warnings for collection URLs and sub-paths.
 
-The following sequence requires the people file to be converted to a directory:
+The following sequence requires the `people` _file_ to be converted to a _directory_:
+
 	GET /people
 	GET /people/123
 
@@ -42,6 +43,8 @@ As a tip, reference collections using a trailing slash.
 
 	GET /people/
 	GET /people/123
+
+For more information on this, read the [Apache documentation on mod_dir's DirectorySlash option](http://httpd.apache.org/docs/2.0/mod/mod_dir.html#DirectorySlash).
 
 Also, querystring requests will go to the original file:
 
