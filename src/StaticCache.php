@@ -1,9 +1,9 @@
 <?php
 /**
  * Static caching library. So simple, you should KISS it.
- * 
+ *
  * PHP version 5
- * 
+ *
  * @category  Caching
  * @package   StaticCache
  * @author    Brett Bieber <brett.bieber@gmail.com>
@@ -14,9 +14,9 @@
 
 /**
  * Simple static caching library which uses the requestURI and filesystem.
- * 
+ *
  * PHP version 5
- * 
+ *
  * @category  Caching
  * @package   StaticCache
  * @author    Brett Bieber <brett.bieber@gmail.com>
@@ -94,12 +94,12 @@ class StaticCache
 
     /**
      * Get configuration options
-     * 
+     *
      * @return array
      */
     public function getOptions()
     {
-    	return $this->options;
+        return $this->options;
     }
 
     /**
@@ -136,6 +136,7 @@ class StaticCache
     {
         $file = $this->getLocalFilename($request_uri);
         $this->createDirs($file);
+
         return $this->saveCacheFile($file, $data);
     }
 
@@ -187,6 +188,7 @@ class StaticCache
 
         if (is_file($dir)) {
             $this->convertFileToDir($dir);
+
             return true;
         }
 
@@ -205,18 +207,18 @@ class StaticCache
 
     /**
      * Convert a file to a directory
-     * 
+     *
      * This method corrects request sequences such as:
      * GET /people
      * GET /people/123
-     * 
-     * The first request will create a people file and not a directory, this 
+     *
+     * The first request will create a people file and not a directory, this
      * method converts the people file into a directory.
      *
      * @param string $file Existing file to convert to a directory
      *
      * @throws Exception
-     * 
+     *
      * @return true
      */
     protected function convertFileToDir($file)
@@ -243,12 +245,13 @@ class StaticCache
 
         // Remove temprary file
         unlink($file . '__staticcache__');
+
         return true;
     }
 
     /**
      * Save contents to specified filename
-     * 
+     *
      * This is a hardended version of file_put_contents
      *
      * @param string $file     Local filename to write
@@ -282,7 +285,7 @@ class StaticCache
             if (!$cachefile_fp) {
                 throw new Exception("Could not open $file for writing. Likely a permissions error.");
             }
-    
+
             $cachefile_fstat = fstat($cachefile_fp);
             if (
             $cachefile_lstat['mode'] == $cachefile_fstat['mode'] &&
@@ -302,25 +305,26 @@ class StaticCache
         }
 
         fclose($cachefile_fp);
+
         return true;
     }
 
     /**
      * This is a simple method for handling the most basic of output caching.
-     * 
+     *
      * This uses output buffering to capture any generated output, then saves
      * that output to a filename matching the request URI.
-     * 
-     * Certain conditions are checked to ensure only idempotent requests are 
+     *
+     * Certain conditions are checked to ensure only idempotent requests are
      * saved:
-     * 
+     *
      * * $_GET, $_POST, and $_FILES must all be empty
      * * No headers must be already sent
      * * If a Status header is to be sent, must be <300
      * * Do not cache Location: redirects
-     * 
+     *
      * @param array $options Associative array of options
-     * 
+     *
      * @see StaticCache::__construct()
      */
     public static function autoCache($options = array())
@@ -333,7 +337,7 @@ class StaticCache
                 $data = ob_get_contents();
                 try {
                     $cache->save($data, $request_uri);
-                } catch(Exception $e) {
+                } catch (Exception $e) {
                     // Fail silently
                 }
             }
@@ -342,10 +346,10 @@ class StaticCache
 
    /**
     * Simple checks to determine if a request should be cached or not.
-    * 
+    *
     * @return bool
     */
-    function requestIsCacheable($get = array(), $post = array(), $files = array(), $server = array())
+    public function requestIsCacheable($get = array(), $post = array(), $files = array(), $server = array())
     {
         if (!(
                empty($get)
@@ -388,11 +392,11 @@ class StaticCache
 
     /**
      * Test helper
-     * 
+     *
      * @return array Array of headers to be sent
      */
     protected function getResponseHeaders()
     {
-    	return headers_list();
+        return headers_list();
     }
 }
